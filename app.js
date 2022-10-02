@@ -1,33 +1,36 @@
-// Integrer ou inclure ou encore importer et ses fonctions dans notre code la librerie express js
-// "test": "echo \"Error: no test specified\" && exit 1"
-
 const express = require('express')
-// import express from 'express'
-
-// la constante est l'instaciation de notre objet express qui va contenir notre serveur ainsi que les 
-// methodes que nous aurons besoinspour le faire fonctonner
+const {success, getUniqueId} = require('./helper')
+const morgan = require('morgan')
+const bodyParse = require('body-parser')
+const port = 3000
 const app = express()
-
-const port = 8080
-
-// jusque la le serveur est preparer mais pas lancé
-
-// Pour que notre serveur puisse être à l’écoute il faut maintenant utiliser la méthode listen 
-// fournie dans app et lui spécifier un port.
-
-// En lançant la commande node index.js dans votre terminal, vous verrez qu’il affichera que votre 
-// serveur est à l’écoute. Cela veut dire que tout fonctionne bien. S’il y a une erreur, vous aurez 
-// droit à un message d’erreur sur votre terminal.
 const parkings = require('./parking.json')
 
-console.log(parkings)
-
+app
+.use(morgan('dev'))
+.use(bodyParse.json())
 
 app.get('/parkings', (req, res)=>{
-    res.status(200).json(parkings)
-    console.log('Il a eu une requete')
+    const message = "reussie"
+    res.status(200)
+    res.json(success(message, parkings))
+})
+
+app.get('/parkings/:id', (req, res)=>{
+    const id = getUniqueId(req.params.id)
+    const parking = parkings.find(parking => parking.id === id)
+    const message = "success request"
+    res.send(success(message, parking))
+})
+
+app.post('/parkings', (req, res) => {
+    const id = getUniqueId(parkings)
+    const createParking = {...req.body, ...{id: id, created: new Date()}}
+    parkings.push(createParking)
+    const message = "Element cree"
+    res.json(success(message, createParking))
 })
 
 app.listen(port, ()=>{
-    console.log('Serveur est demarré')
+    console.log('Le serveur a bien été demarré')
 })
