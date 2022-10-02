@@ -5,6 +5,7 @@ const bodyParse = require('body-parser')
 const port = 3000
 const app = express()
 const parkings = require('./parking.json')
+const parkings = require('./parking.json')
 
 app
 .use(morgan('dev'))
@@ -29,6 +30,16 @@ app.post('/parkings', (req, res) => {
     parkings.push(createParking)
     const message = "Element cree"
     res.json(success(message, createParking))
+})
+
+app.put('/parkings/:id', (req, res)=>{
+    const id = parseInt(req.params.id)
+    const parkingsUpdate = {...req.body, id: id}
+    const parkings = parkings.map(parking => {
+        return parking.id === id ? parkingsUpdate: parking
+    })
+    const message = "Supprimé"
+    res.json(success(message, parkingsUpdate))
 })
 
 app.listen(port, ()=>{

@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const bodyParse = require('body-parser')
 const port = 3000
 const app = express()
-const parkings = require('./parking.json')
+let parkings = require('./parking.json')
 
 app
 .use(morgan('dev'))
@@ -29,6 +29,24 @@ app.post('/parkings', (req, res) => {
     parkings.push(createParking)
     const message = "Element cree"
     res.json(success(message, createParking))
+})
+
+app.put('/parkings/:id', (req, res)=>{
+    const id = parseInt(req.params.id)
+    const parkingUpdate = {...req.body, ...{id: id}}
+    parkings = parkings.map(parking => {
+        return parking.id === id ? parkingUpdate: parking
+    })
+    const message = "Modifiée"
+    res.json(success(message, parkingUpdate))
+})
+
+app.delete('/parkings/:id', (req, res) => {
+    const id = parseInt(req.params.id)
+    const parkingDeleted = parkings.find(parking => parking.id === id)
+    parkings = parkings.filter(parking => parking.id !== id)
+    const message = "Supprimé"
+    res.json(success(message, parkingDeleted))
 })
 
 app.listen(port, ()=>{
