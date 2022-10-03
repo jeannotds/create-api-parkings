@@ -1,3 +1,19 @@
+<!-- Sequelize est notre principal interlocuteur pour interragir avec notre base de données
+    depuis notre API rest
+
+    Sequelize utilise les models
+    Un modele est une abstraction qui represente une table dans base de données
+
+
+
+
+
+
+ -->
+
+
+
+
 // // Integrer ou inclure ou encore importer et ses fonctions dans notre code la librerie express js
 // // "test": "echo \"Error: no test specified\" && exit 1"
 
