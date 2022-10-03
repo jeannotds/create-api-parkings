@@ -27,10 +27,16 @@ const sequelize = new Sequelize( 'parkings' //Nom de la BD
   .catch(error => console.error(`Impossible de se connecter a la base de données ${error}`))
 
   const Parking = ParkingModel(sequelize, DataTypes)
-  
-  sequelize.sync({force: true})
-  .then(_ => console.log('La base de données a bien été synchroniser'))
 
+  sequelize.sync({force: true})
+  .then(_ => {
+    Parking.create({
+            name: "Parking 2",
+			type: "AIRPO",
+			city: "BEAUVAIS"
+        })
+    console.log('La base de données a bien été synchroniser')
+})
 
 app
 .use(morgan('dev'))
