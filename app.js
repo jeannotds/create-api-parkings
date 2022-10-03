@@ -1,10 +1,30 @@
 const express = require('express')
 const {success, getUniqueId} = require('./helper')
+const { Sequelize } = require('sequelize')
 const morgan = require('morgan')
 const bodyParse = require('body-parser')
 const port = 3000
 const app = express()
 let parkings = require('./parking.json')
+
+//Creer l'instance sequelize
+const sequelize = new Sequelize( 'parkings' //Nom de la BD
+    , 'root', // L'identifiant et par defaut le nom d'utilisateur est root
+    '',  // Password de votre bd
+    {
+    host: 'localhost', // indique ou se trouve la base de donnees depuis votre machne
+    dialect: 'mariadb',//Le nom du driver pour permettre a sequelize d'interagir avec BD
+    dialectOptions: { // Permet d'arreter l'affichage d'avertissement dans console plutard 
+      timezone: 'Etc/GMT-2',
+    },
+    logging: false
+  })
+
+  //tester si la connexion a reussie ou pas : on utilise authentication de notre instance sequelize
+  sequelize.authenticate()
+  .then(_ => console.log(' La connexion a la base de données a bien été etablie'))
+  .catch(error => console.error(`Impossible de se connecter a la base de données ${error}`))
+
 
 app
 .use(morgan('dev'))
