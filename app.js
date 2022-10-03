@@ -30,12 +30,15 @@ const sequelize = new Sequelize( 'parkings' //Nom de la BD
 
   sequelize.sync({force: true})
   .then(_ => {
-    Parking.create({
-            name: "Parking 2",
-			type: "AIRPO",
-			city: "BEAUVAIS"
-        })
     console.log('La base de données a bien été synchroniser')
+
+    parkings.map(parking => {
+        Parking.create({
+            name: parking.name,
+			type: parking.type,
+			city: parking.city
+        }).then(parkings2 => console.log(parkings2.toJSON()))
+    })
 })
 
 app
