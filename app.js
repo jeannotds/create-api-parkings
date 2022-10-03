@@ -1,11 +1,12 @@
 const express = require('express')
 const {success, getUniqueId} = require('./helper')
-const { Sequelize } = require('sequelize')
+const { Sequelize, DataTypes } = require('sequelize')
 const morgan = require('morgan')
 const bodyParse = require('body-parser')
 const port = 3000
 const app = express()
 let parkings = require('./parking.json')
+const ParkingModel = require('./src/models/parkings')
 
 //Creer l'instance sequelize
 const sequelize = new Sequelize( 'parkings' //Nom de la BD
@@ -24,6 +25,11 @@ const sequelize = new Sequelize( 'parkings' //Nom de la BD
   sequelize.authenticate()
   .then(_ => console.log(' La connexion a la base de données a bien été etablie'))
   .catch(error => console.error(`Impossible de se connecter a la base de données ${error}`))
+
+  const Parking = ParkingModel(sequelize, DataTypes)
+  
+  sequelize.sync({force: true})
+  .then(_ => console.log('La base de données a bien été synchroniser'))
 
 
 app
